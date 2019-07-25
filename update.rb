@@ -1,10 +1,8 @@
 #!/usr/bin/env ruby
 
 require 'base64'
-require 'gist'
 require 'json'
 require 'net/http'
-require 'open3'
 require 'toml'
 
 BASE = 'https://wakatime.com/api/v1'
