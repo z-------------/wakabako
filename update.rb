@@ -39,9 +39,7 @@ JSON.parse(res.body)["data"]["languages"][0...5].each { |language|
   formatted.append "#{language["name"].ljust 11} #{time_str.ljust 14} #{make_bar(percent, 21)}"
 }
 
-file = File.open('gist.txt', 'w')
-file.puts formatted
-file.close
+File.open('gist.txt', 'w') { |file| file.puts formatted }
 
 cmd = "gist -u #{config['gist_id']} -f \"#{config['title']}\" gist.txt"
 system cmd
