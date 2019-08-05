@@ -18,7 +18,7 @@ def make_bar(p, size)
   (BAR_FULL * (p * size).round).ljust(size, BAR_EMPTY)
 end
 
-config = TOML.load_file('config.toml')
+config = TOML.load_file("#{__dir__}/config.toml")
 auth_key_hashed = Base64.encode64(config['auth_key']).chomp
 
 uri = URI("#{BASE}/users/#{config['user']}/stats/last_7_days")
@@ -38,6 +38,10 @@ JSON.parse(res.body)["data"]["languages"][0...5].each { |language|
   time_str = "#{hours} #{pluralize(hours, 'hr')} #{mins} #{pluralize(mins, 'min')}"
   formatted.append "#{language["name"].ljust 11} #{time_str.ljust 14} #{make_bar(percent, 21)}"
 }
+
+if formatted.empty?
+  formatted.append 'Nothing here.'
+end
 
 File.open('gist.txt', 'w') { |file| file.puts formatted }
 
