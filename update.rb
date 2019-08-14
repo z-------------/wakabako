@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
 require 'base64'
+require 'gist'
 require 'json'
 require 'net/http'
 require 'toml'
@@ -43,7 +44,7 @@ if formatted.empty?
   formatted.append 'Nothing here.'
 end
 
-File.open('gist.txt', 'w') { |file| file.puts formatted }
-
-cmd = "gist -u #{config['gist_id']} -f \"#{config['title']}\" gist.txt"
-system cmd
+Gist.gist(formatted.join("\n"), {
+  :update => config['gist_id'],
+  :filename => config['title']
+})
