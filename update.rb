@@ -44,7 +44,7 @@ if formatted.empty?
   formatted.append 'Nothing here.'
 end
 
-Gist.gist(formatted.join("\n"), {
+Gist.gist(formatted.join("\n") + "\n", {
   :update => config['gist_id'],
   :filename => config['title']
 })
