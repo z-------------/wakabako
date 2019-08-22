@@ -3,9 +3,9 @@ GEM
   specs:
     gist (5.0.0)
     mini_portile2 (2.4.0)
-    nokogiri (1.10.3)
+    nokogiri (1.10.4)
       mini_portile2 (~> 2.4.0)
-    nokogiri (1.10.3-x64-mingw32)
+    nokogiri (1.10.4-x64-mingw32)
       mini_portile2 (~> 2.4.0)
     parslet (1.8.2)
     toml (0.0.4)
@@ -17,7 +17,7 @@ PLATFORMS
 
 DEPENDENCIES
   gist
-  nokogiri (~> 1.10.3)
+  nokogiri (~> 1.10.4)
   toml (~> 0.0.3)
 
 BUNDLED WITH
