@@ -26,25 +26,25 @@ uri = URI("#{BASE}/users/#{config['user']}/stats/last_7_days")
 req = Net::HTTP::Get.new(uri)
 req['Authorization'] = "Basic #{auth_key_hashed}"
 
-res = Net::HTTP.start(uri.hostname, uri.port, :use_ssl => true) { |http|
+res = Net::HTTP.start(uri.hostname, uri.port, :use_ssl => true) do |http|
   http.request(req)
-}
+end
 
 formatted = []
 
-JSON.parse(res.body)["data"]["languages"][0...5].each { |language|
-  hours = language["hours"]
-  mins = language["minutes"]
-  percent = language["percent"] / 100
+JSON.parse(res.body)['data']['languages'][0...5].each do |language|
+  hours = language['hours']
+  mins = language['minutes']
+  percent = language['percent'] / 100
   time_str = "#{hours} #{pluralize(hours, 'hr')} #{mins} #{pluralize(mins, 'min')}"
-  formatted.append "#{language["name"].ljust 11} #{time_str.ljust 14} #{make_bar(percent, 21)}"
-}
+  formatted.append "#{language['name'].ljust 11} #{time_str.ljust 14} #{make_bar(percent, 21)}"
+end
 
 if formatted.empty?
   formatted.append 'Nothing here.'
 end
 
 Gist.gist(formatted.join("\n") + "\n", {
-  :update => config['gist_id'],
-  :filename => config['title']
+  update: config['gist_id'],
+  filename: config['title']
 })
