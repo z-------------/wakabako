@@ -67,6 +67,29 @@ class String
   end
 end
 
+def format_cols(rows, pad)
+  lines = [''] * rows.length
+  cols_count = rows.first.length
+  widths = [0] * cols_count
+
+  rows.each do |row|
+    row.each_with_index do |item, j|
+      width = item.length
+      if width > widths[j]
+        widths[j] = width
+      end
+    end
+  end
+
+  rows.each_with_index do |row, i|
+    row.each_with_index do |item, j|
+      lines[i] += ' ' * pad[j][0] + item.ljust(widths[j]) + ' ' * pad[j][1]
+    end
+  end
+
+  lines
+end
+
 ### parse options ###
 
 opts = {
@@ -114,17 +137,19 @@ res = Net::HTTP.start(uri.hostname, uri.port, :use_ssl => true) do |http|
   http.request(req)
 end
 
-lines = []
+table = []
 JSON.parse(res.body)['data']['languages'][0...5].each do |language|
   hours = language['hours']
   mins = language['minutes']
   percent = language['percent'] / 100
   time_str = format_duration(hours, mins, opts[:format])
-  lines.append "#{language['name'].ljust 11} #{time_str.ljust 14} #{make_bar(percent, 21)}"
+
+  table << [language['name'], time_str, make_bar(percent, 21)]
 end
 
+lines = format_cols(table, [[0, 2], [0, 1], [0, 0]])
 if lines.empty?
-  lines.append 'Nothing here.'
+  lines << 'Nothing here.'
 end
 
 formatted = lines.join("\n") + "\n"
