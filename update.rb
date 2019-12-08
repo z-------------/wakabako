@@ -10,6 +10,7 @@ require 'toml'
 
 BASE = 'https://wakatime.com/api/v1'
 
+BAR_WIDTH = 21
 BAR_EMPTY = '░'
 BAR_FULL = '█'
 
@@ -95,8 +96,10 @@ end
 opts = {
   format: :long,
   dry: false,
-  'include-percent': false
+  'include-percent': false,
+  'relative-bars': false
 }
+
 ARGV.each do |arg|
   p = parse_opt arg
   next if not p
@@ -139,7 +142,7 @@ res = Net::HTTP.start(uri.hostname, uri.port, :use_ssl => true) do |http|
 end
 
 table = []
-JSON.parse(res.body)['data']['languages'][0...5].each do |language|
+JSON.parse(res.body)['data']['languages'][0...5].each_with_index do |language, i|
   row = []
 
   hours = language['hours']
@@ -147,7 +150,18 @@ JSON.parse(res.body)['data']['languages'][0...5].each do |language|
   percent = language['percent']
   time_str = format_duration(hours, mins, opts[:format])
 
-  row << language['name'] << time_str << make_bar(percent / 100, 21)
+  if opts[:'relative-bars']
+    if i == 0
+      $percent_max = percent
+      bar = make_bar(1, BAR_WIDTH)
+    else
+      bar = make_bar(percent / $percent_max, BAR_WIDTH)
+    end
+  else
+    bar = make_bar(percent / 100, BAR_WIDTH)
+  end
+
+  row << language['name'] << time_str << bar
   if opts[:'include-percent']
     row << "#{percent.round.to_s.rjust 2}%"
   end
