@@ -44,7 +44,7 @@ def is_b(b)
 end
 
 def parse_opt(opt_str)
-  m = opt_str.match /--(\w+)(=(\w+))?/
+  m = opt_str.match /--([A-z0-9-]+)(=(\w+))?/
   if not m
     nil
   elsif m[3]
@@ -94,7 +94,8 @@ end
 
 opts = {
   format: :long,
-  dry: false
+  dry: false,
+  'include-percent': false
 }
 ARGV.each do |arg|
   p = parse_opt arg
@@ -139,15 +140,21 @@ end
 
 table = []
 JSON.parse(res.body)['data']['languages'][0...5].each do |language|
+  row = []
+
   hours = language['hours']
   mins = language['minutes']
-  percent = language['percent'] / 100
+  percent = language['percent']
   time_str = format_duration(hours, mins, opts[:format])
 
-  table << [language['name'], time_str, make_bar(percent, 21)]
+  row << language['name'] << time_str << make_bar(percent / 100, 21)
+  if opts[:'include-percent']
+    row << "#{percent.round.to_s.rjust 2}%"
+  end
+  table << row
 end
 
-lines = format_cols(table, [[0, 2], [0, 1], [0, 0]])
+lines = format_cols(table, [[0, 2], [0, 1], [0, 0], [1, 0]])
 if lines.empty?
   lines << 'Nothing here.'
 end
