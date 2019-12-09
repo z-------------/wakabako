@@ -134,7 +134,7 @@ end
 if opts[:help]
   help = <<-HELP
 
-./upgrade.rb [<options>]
+./wakabako.rb [<options>]
 
 Options:
   --dry             Print to stdout instead of uploading a gist.    [boolean] [default=false]
