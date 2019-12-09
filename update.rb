@@ -94,8 +94,9 @@ end
 ### parse options ###
 
 opts = {
-  format: :long,
   dry: false,
+  format: :long,
+  help: false,
   'include-percent': false,
   'relative-bars': false
 }
@@ -129,6 +130,23 @@ ARGV.each do |arg|
 end
 
 ### main ###
+
+if opts[:help]
+  help = <<-HELP
+
+./upgrade.rb [<options>]
+
+Options:
+  --dry             Print to stdout instead of uploading a gist.    [boolean] [default=false]
+  --format=FORMAT   Control duration format. FORMAT can be `short'
+                    or `long'.                                       [string] [default=short]
+  --include-percent Include a percentage after each bar.            [boolean] [default=false]
+  --relative-bars   Scale bars relative to the most used language
+                    instead of the sum of all languages used.       [boolean] [default=false]
+  HELP
+  puts help
+  exit
+end
 
 config = TOML.load_file("#{__dir__}/config.toml")
 auth_key_hashed = Base64.encode64(config['auth_key']).chomp
