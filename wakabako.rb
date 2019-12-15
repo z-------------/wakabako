@@ -159,11 +159,11 @@ end
 
 begin
   config = read_config("#{__dir__}/config.txt")
-rescue
+rescue Errno::ENOENT
   begin
     config = read_config("#{__dir__}/config.toml")
-  rescue
-    STDERR.puts 'Could not read config file. Exiting.'
+  rescue Errno::ENOENT
+    STDERR.puts 'No config file found. Exiting.'
     exit 1
   end
 end
