@@ -16,9 +16,11 @@ Options:
 
 == Config
 
-In `config.toml`:
+In `config.txt`:
 
-* `user` — Wakatime username
-* `auth_key` — Wakatime auth key
-* `gist_id`
-* `title` — Gist title
+....
+user = <wakatime username>
+auth_key = <wakatime auth key>
+gist_id = <id of the gist to write to>
+title = <gist title>
+....

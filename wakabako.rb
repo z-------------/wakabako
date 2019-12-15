@@ -4,7 +4,6 @@ require 'base64'
 require 'gist'
 require 'json'
 require 'net/http'
-require 'toml'
 
 ### consts ###
 
@@ -91,6 +90,19 @@ def format_cols(rows, pad)
   lines
 end
 
+def read_config(filename)
+  config = {}
+  data = File.open(filename).read
+  data.gsub!(/\r\n?/, "\n") # normalize newlines
+  data.each_line do |line|
+    kv = line.split('=').map do |t| t.strip end
+    next if kv.length != 2
+    val = kv[1].gsub(/^"/, '').gsub(/"$/, '') # remove surrounding quotes
+    config[kv[0]] = val
+  end
+  config
+end
+
 ### parse options ###
 
 opts = {
@@ -145,7 +157,16 @@ Options:
   exit
 end
 
-config = TOML.load_file("#{__dir__}/config.toml")
+begin
+  config = read_config("#{__dir__}/config.txt")
+rescue
+  begin
+    config = read_config("#{__dir__}/config.toml")
+  rescue
+    STDERR.puts 'Could not read config file. Exiting.'
+    exit 1
+  end
+end
 auth_key_hashed = Base64.encode64(config['auth_key']).chomp
 
 uri = URI("#{BASE}/users/#{config['user']}/stats/last_7_days")
