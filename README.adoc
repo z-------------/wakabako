@@ -2,7 +2,7 @@
 
 == Usage
 
-Run `bundler` and set up `config.toml` (see link:#config[config]), then run `wakabako.rb`:
+Run `bundler` and set up the link:#config[config], then run `wakabako.rb`:
 
 ....
 Options:
