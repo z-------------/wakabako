@@ -5,8 +5,6 @@
 Run `bundler` and set up `config.toml` (see link:#config[config]), then:
 
 ....
-./wakabako.rb [<options>]
-
 Options:
   --dry             Print to stdout instead of uploading a gist.    [boolean] [default=false]
   --format=FORMAT   Control duration format. FORMAT can be `short'

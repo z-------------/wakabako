@@ -133,9 +133,6 @@ end
 
 if opts[:help]
   help = <<-HELP
-
-./wakabako.rb [<options>]
-
 Options:
   --dry             Print to stdout instead of uploading a gist.    [boolean] [default=false]
   --format=FORMAT   Control duration format. FORMAT can be `short'
