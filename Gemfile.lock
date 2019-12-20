@@ -1,5 +1,5 @@
 GEM
-  remote: http://rubygems.org/
+  remote: https://rubygems.org/
   specs:
     gist (5.0.0)
     mini_portile2 (2.4.0)
@@ -21,4 +21,4 @@ DEPENDENCIES
   toml (~> 0.0.3)
 
 BUNDLED WITH
-   2.0.2
+   2.1.2
