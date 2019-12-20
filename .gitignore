@@ -1,2 +1,4 @@
-config.toml
+config.*
 gist.txt
+
+*.swp

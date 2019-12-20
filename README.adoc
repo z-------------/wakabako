@@ -1,0 +1,26 @@
+= wakabako
+
+== Usage
+
+Run `bundler` and set up the link:#config[config], then run `wakabako.rb`:
+
+....
+Options:
+  --dry             Print to stdout instead of uploading a gist.    [boolean] [default=false]
+  --format=FORMAT   Control duration format. FORMAT can be `short'
+                    or `long'.                                       [string] [default=short]
+  --include-percent Include a percentage after each bar.            [boolean] [default=false]
+  --relative-bars   Scale bars relative to the most used language
+                    instead of the sum of all languages used.       [boolean] [default=false]
+....
+
+== Config
+
+In `config.txt`:
+
+....
+user = <wakatime username>
+auth_key = <wakatime auth key>
+gist_id = <id of the gist to write to>
+title = <gist title>
+....
