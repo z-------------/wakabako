@@ -4,104 +4,17 @@ require 'base64'
 require 'gist'
 require 'json'
 require 'net/http'
+require_relative 'helpers.rb'
 
 ### consts ###
 
 BASE = 'https://wakatime.com/api/v1'
 
-BAR_WIDTH = 21
-BAR_EMPTY = '░'
-BAR_FULL = '█'
-
-### helper functions ###
-
-def seppuku msg
-  STDERR.puts msg
-  exit 1
-end
-
-def pluralize(n, s, c = 's')
-  if n == 1 then s else s + c end
-end
-
-def make_bar(p, size)
-  (BAR_FULL * (p * size).round).ljust(size, BAR_EMPTY)
-end
-
-def format_duration(h, m, f)
-  case f
-  when :long
-    "#{h} #{pluralize(h, 'hr')} #{m} #{pluralize(m, 'min')}"
-  when :short
-    "#{h.to_s.rjust 2}h #{m.to_s.rjust 2}m"
-  else
-    raise 'Invalid format specified'
-  end
-end
-
-def is_b(b)
-  b.instance_of? TrueClass or b.instance_of? FalseClass
-end
-
-def parse_opt(opt_str)
-  m = opt_str.match /--([A-z0-9-]+)(=(\w+))?/
-  if not m
-    nil
-  elsif m[3]
-    [m[1], m[3]]
-  else
-    [m[1]]
-  end
-end
-
-class String
-  def to_b
-    case self
-    when 'true'
-      true
-    when 'false'
-      false
-    else
-      raise 'Invalid'
-    end
-  end
-end
-
-def format_cols(rows, pad)
-  lines = [''] * rows.length
-  cols_count = rows.first.length
-  widths = [0] * cols_count
-
-  rows.each do |row|
-    row.each_with_index do |item, j|
-      width = item.length
-      if width > widths[j]
-        widths[j] = width
-      end
-    end
-  end
-
-  rows.each_with_index do |row, i|
-    row.each_with_index do |item, j|
-      lines[i] += ' ' * pad[j][0] + item.ljust(widths[j]) + ' ' * pad[j][1]
-    end
-  end
-
-  lines
-end
-
-def read_config(filename)
-  config = {}
-  data = File.open(filename).read
-  data.gsub!(/\r\n?/, "\n") # normalize newlines
-  data.each_line do |line|
-    kv = line.split('=').map do |t| t.strip end
-    next if kv.length != 2
-    val = kv[1].gsub(/^"/, '').gsub(/"$/, '') # remove surrounding quotes
-    config[kv[0]] = val
-  end
-  config
-end
+BAR_WIDTH = 20
+BAR_SCHEMES = [
+  ['░', '▏', '▎', '▍', '▌', '▋', '▊', '▉', '█'],
+  [' ', '▏', '▎', '▍', '▌', '▋', '▊', '▉', '█'],
+]
 
 ### parse options ###
 
@@ -110,7 +23,9 @@ opts = {
   format: :long,
   help: false,
   'include-percent': false,
-  'relative-bars': false
+  'relative-bars': false,
+  scheme: 0,
+  fractional: false,
 }
 
 ARGV.each do |arg|
@@ -135,7 +50,11 @@ ARGV.each do |arg|
     if not val_str
       seppuku "Invalid value given for option '#{key}'"
     end
-    val = val_str.to_sym
+    if opts[key].class.equal? Integer
+      val = val_str.to_i
+    else
+      val = val_str.to_sym
+    end
   end
 
   opts[key] = val
@@ -186,16 +105,16 @@ JSON.parse(res.body)['data']['languages'][0...5].each_with_index do |language, i
   percent = language['percent']
   time_str = format_duration(hours, mins, opts[:format])
 
+  perc = percent / 100
   if opts[:'relative-bars']
     if i == 0
       $percent_max = percent
-      bar = make_bar(1, BAR_WIDTH)
+      perc = 1.0
     else
-      bar = make_bar(percent / $percent_max, BAR_WIDTH)
+      perc = percent / $percent_max
     end
-  else
-    bar = make_bar(percent / 100, BAR_WIDTH)
   end
+  bar = make_bar(perc, BAR_WIDTH, opts[:scheme], opts[:fractional])
 
   row << language['name'] << time_str << bar
   if opts[:'include-percent']
