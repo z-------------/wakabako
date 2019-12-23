@@ -10,7 +10,6 @@ require_relative 'helpers.rb'
 
 BASE = 'https://wakatime.com/api/v1'
 
-BAR_WIDTH = 20
 BAR_SCHEMES = [
   ['░', '▏', '▎', '▍', '▌', '▋', '▊', '▉', '█'],
   [' ', '▏', '▎', '▍', '▌', '▋', '▊', '▉', '█'],
@@ -26,6 +25,7 @@ opts = {
   'relative-bars': false,
   scheme: 0,
   fractional: false,
+  width: 21,
 }
 
 ARGV.each do |arg|
@@ -114,7 +114,7 @@ JSON.parse(res.body)['data']['languages'][0...5].each_with_index do |language, i
       perc = percent / $percent_max
     end
   end
-  bar = make_bar(perc, BAR_WIDTH, opts[:scheme], opts[:fractional])
+  bar = make_bar(perc, opts[:width], opts[:scheme], opts[:fractional])
 
   row << language['name'] << time_str << bar
   if opts[:'include-percent']
