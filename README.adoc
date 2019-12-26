@@ -6,12 +6,17 @@ Run `bundler` and set up the link:#config[config], then run `wakabako.rb`:
 
 ....
 Options:
+  --help            Print this help and exit.                       [boolean] [default=false]
   --dry             Print to stdout instead of uploading a gist.    [boolean] [default=false]
   --format=FORMAT   Control duration format. FORMAT can be `short'
-                    or `long'.                                       [string] [default=short]
+                    or `long'.                                       [string] [default=long]
+  --fractional      Use partially-filled block element characters.  [boolean] [default=false]
   --include-percent Include a percentage after each bar.            [boolean] [default=false]
   --relative-bars   Scale bars relative to the most used language
                     instead of the sum of all languages used.       [boolean] [default=false]
+  --scheme=SCHEME   Which set of block element characters to use.
+                    SCHEME can be 0 or 1.                           [integer] [default=0]
+  --width=WIDTH     The number of characters to use for each bar.   [integer] [default=21]
 ....
 
 == Config

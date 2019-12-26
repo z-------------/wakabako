@@ -20,11 +20,11 @@ BAR_SCHEMES = [
 opts = {
   dry: false,
   format: :long,
+  fractional: false,
   help: false,
   'include-percent': false,
   'relative-bars': false,
   scheme: 0,
-  fractional: false,
   width: 21,
 }
 
@@ -63,16 +63,20 @@ end
 ### main ###
 
 if opts[:help]
-  help = <<-HELP
+  puts <<-END
 Options:
+  --help            Print this help and exit.                       [boolean] [default=false]
   --dry             Print to stdout instead of uploading a gist.    [boolean] [default=false]
   --format=FORMAT   Control duration format. FORMAT can be `short'
-                    or `long'.                                       [string] [default=short]
+                    or `long'.                                       [string] [default=long]
+  --fractional      Use partially-filled block element characters.  [boolean] [default=false]
   --include-percent Include a percentage after each bar.            [boolean] [default=false]
   --relative-bars   Scale bars relative to the most used language
                     instead of the sum of all languages used.       [boolean] [default=false]
-  HELP
-  puts help
+  --scheme=SCHEME   Which set of block element characters to use.
+                    SCHEME can be 0 or 1.                           [integer] [default=0]
+  --width=WIDTH     The number of characters to use for each bar.   [integer] [default=21]
+  END
   exit
 end
 
