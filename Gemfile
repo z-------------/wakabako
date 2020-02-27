@@ -1,4 +1,4 @@
 source 'https://rubygems.org'
 
 gem 'gist'
-gem 'nokogiri', '~> 1.10.4'
+gem 'nokogiri', '~> 1.10.8'
