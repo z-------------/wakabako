@@ -86,8 +86,7 @@ rescue Errno::ENOENT
   begin
     config = read_config("#{__dir__}/config.toml")
   rescue Errno::ENOENT
-    STDERR.puts 'No config file found. Exiting.'
-    exit 1
+    seppuku 'No config file found. Exiting.'
   end
 end
 auth_key_hashed = Base64.encode64(config['auth_key']).chomp
