@@ -1,8 +1,19 @@
 = wakabako
 
-== Usage
+== Config
 
-Run `bundler` and set up the link:#config[config], then run `wakabako.rb`:
+1. Install dependencies with `bundle`.
+2. Create a token for the `gist` gem with `bundle exec gist --login`.
+3. Setup `config.txt`:
+
+....
+user = <wakatime username>
+auth_key = <wakatime auth key>
+gist_id = <id of the gist to write to>
+title = <gist title>
+....
+
+== Usage
 
 ....
 Options:
@@ -19,13 +30,3 @@ Options:
   --width=WIDTH     The number of characters to use for each bar.   [integer] [default=21]
 ....
 
-== Config
-
-In `config.txt`:
-
-....
-user = <wakatime username>
-auth_key = <wakatime auth key>
-gist_id = <id of the gist to write to>
-title = <gist title>
-....
