@@ -1,20 +1,17 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    gist (5.0.0)
+    gist (5.1.0)
     mini_portile2 (2.4.0)
-    nokogiri (1.10.8)
-      mini_portile2 (~> 2.4.0)
-    nokogiri (1.10.8-x64-mingw32)
+    nokogiri (1.10.9)
       mini_portile2 (~> 2.4.0)
 
 PLATFORMS
   ruby
-  x64-mingw32
 
 DEPENDENCIES
-  gist
+  gist (~> 5.1.0)
   nokogiri (~> 1.10.8)
 
 BUNDLED WITH
-   2.1.2
+   2.1.4
