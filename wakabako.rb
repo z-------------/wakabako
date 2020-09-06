@@ -23,6 +23,7 @@ opts = {
   fractional: false,
   help: false,
   'include-percent': false,
+  'name-mappings': '',
   'relative-bars': false,
   scheme: 0,
   width: 21,
@@ -50,8 +51,11 @@ ARGV.each do |arg|
     if not val_str
       seppuku "Invalid value given for option '#{key}'"
     end
-    if opts[key].class.equal? Integer
+    opt = opts[key]
+    if opt.class.equal? Integer
       val = val_str.to_i
+    elsif opt.class.equal? String
+      val = val_str
     else
       val = val_str.to_sym
     end
@@ -63,7 +67,7 @@ end
 ### main ###
 
 if opts[:help]
-  puts <<-END
+  puts <<-'END'
 Options:
   --help            Print this help and exit.                       [boolean] [default=false]
   --dry             Print to stdout instead of uploading a gist.    [boolean] [default=false]
@@ -71,6 +75,9 @@ Options:
                     or `long'.                                       [string] [default=long]
   --fractional      Use partially-filled block element characters.  [boolean] [default=false]
   --include-percent Include a percentage after each bar.            [boolean] [default=false]
+  --name-mappings=FILENAME                                           [string] [default=]
+                    Specify a file containing newline-separated
+                    <Wakabako language name>\t<Replacement> pairs.
   --relative-bars   Scale bars relative to the most used language
                     instead of the sum of all languages used.       [boolean] [default=false]
   --scheme=SCHEME   Which set of block element characters to use.
@@ -79,6 +86,8 @@ Options:
     END
   exit
 end
+
+# read config
 
 begin
   config = read_config("#{__dir__}/config.txt")
@@ -90,6 +99,18 @@ rescue Errno::ENOENT
   end
 end
 auth_key_hashed = Base64.encode64(config['auth_key']).chomp
+
+# read name mappings
+
+name_mappings = {}
+if opts[:'name-mappings']
+  name_mappings_filename = opts[:'name-mappings']
+  begin
+    name_mappings = read_name_mappings(File.absolute_path(name_mappings_filename, __dir__))
+  rescue Errno::ENOENT
+    STDERR.puts "Could not read name mappings from '#{name_mappings_filename}'. Continuing."
+  end
+end
 
 uri = URI("#{BASE}/users/#{config['user']}/stats/last_7_days")
 req = Net::HTTP::Get.new(uri)
@@ -119,7 +140,7 @@ JSON.parse(res.body)['data']['languages'][0...5].each_with_index do |language, i
   end
   bar = make_bar(perc, opts[:width], opts[:scheme], opts[:fractional])
 
-  row << language['name'] << time_str << bar
+  row << get_name(language['name'], name_mappings) << time_str << bar
   if opts[:'include-percent']
     row << "#{percent.round.to_s.rjust 2}%"
   end
