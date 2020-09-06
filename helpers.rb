@@ -12,7 +12,7 @@ def make_bar(p, size, scheme = 0, fractional = false)
   count = (p * size)
   full = count.floor
   frac = count % 1
-  (chars.last * full + ((fractional and frac > 0) ? chars[(chars.length * frac).round] : '')).ljust(size, chars.first)
+  (chars.last * full + ((fractional and frac > 0) ? chars[(chars.length * frac).floor] : '')).ljust(size, chars.first)
 end
 
 def format_duration(h, m, f)
