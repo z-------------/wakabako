@@ -23,6 +23,9 @@ Options:
                     or `long'.                                       [string] [default=long]
   --fractional      Use partially-filled block element characters.  [boolean] [default=false]
   --include-percent Include a percentage after each bar.            [boolean] [default=false]
+  --name-mappings=FILENAME                                           [string] [default=]
+                    Specify a file containing newline-separated
+                    <Wakabako language name>\t<Replacement> pairs.
   --relative-bars   Scale bars relative to the most used language
                     instead of the sum of all languages used.       [boolean] [default=false]
   --scheme=SCHEME   Which set of block element characters to use.
