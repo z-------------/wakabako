@@ -103,7 +103,7 @@ auth_key_hashed = Base64.encode64(config['auth_key']).chomp
 # read name mappings
 
 name_mappings = {}
-if opts[:'name-mappings']
+if opts[:'name-mappings'].length > 0
   name_mappings_filename = opts[:'name-mappings']
   begin
     name_mappings = read_name_mappings(File.absolute_path(name_mappings_filename, __dir__))
