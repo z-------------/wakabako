@@ -1,4 +1,4 @@
-def seppuku msg
+def seppuku(msg)
   STDERR.puts msg
   exit 1
 end
@@ -12,7 +12,7 @@ def make_bar(p, size, scheme = 0, fractional = false)
   count = (p * size)
   full = count.floor
   frac = count % 1
-  (chars.last * full + ((fractional and frac > 0) ? chars[(chars.length * frac).round] : '')).ljust(size, chars.first)
+  (chars.last * full + ((fractional and frac > 0) ? chars[(chars.length * frac).floor] : '')).ljust(size, chars.first)
 end
 
 def format_duration(h, m, f)
@@ -31,7 +31,7 @@ def is_b(b)
 end
 
 def parse_opt(opt_str)
-  m = opt_str.match /--([A-z0-9-]+)(=(\w+))?/
+  m = opt_str.match /--([A-z0-9-]+)(=((\w|\.)+))?/
   if not m
     nil
   elsif m[3]
@@ -77,10 +77,14 @@ def format_cols(rows, pad)
   lines
 end
 
+def normalize_newlines!(data)
+  data.gsub!(/\r\n?/, "\n")
+end
+
 def read_config(filename)
   config = {}
   data = File.open(filename).read
-  data.gsub!(/\r\n?/, "\n") # normalize newlines
+  normalize_newlines!(data)
   data.each_line do |line|
     kv = line.split('=').map do |t| t.strip end
     next if kv.length != 2
@@ -88,4 +92,24 @@ def read_config(filename)
     config[kv[0]] = val
   end
   config
+end
+
+def read_name_mappings(filename)
+  name_mappings = {}
+  data = File.open(filename).read
+  normalize_newlines!(data)
+  data.each_line do |line|
+    kv = line.split("\t").map(&:strip)
+    next if kv.length != 2
+    name_mappings[kv[0]] = kv[1]
+  end
+  name_mappings
+end
+
+def get_name(in_name, name_mappings)
+  if name_mappings.include? in_name
+    name_mappings[in_name]
+  else
+    in_name
+  end
 end

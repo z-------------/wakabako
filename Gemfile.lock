@@ -10,11 +10,10 @@ GEM
 
 PLATFORMS
   ruby
-  x64-mingw32
 
 DEPENDENCIES
-  gist
-  nokogiri (~> 1.10.4)
+  gist (~> 5.1.0)
+  nokogiri (~> 1.10.8)
 
 BUNDLED WITH
    2.1.4

@@ -1,8 +1,19 @@
 = wakabako
 
-== Usage
+== Config
 
-Run `bundler` and set up the link:#config[config], then run `wakabako.rb`:
+1. Install dependencies with `bundle`.
+2. Create a token for the `gist` gem with `bundle exec gist --login`.
+3. Setup `config.txt`:
+
+....
+user = <wakatime username>
+auth_key = <wakatime auth key>
+gist_id = <id of the gist to write to>
+title = <gist title>
+....
+
+== Usage
 
 ....
 Options:
@@ -12,6 +23,9 @@ Options:
                     or `long'.                                       [string] [default=long]
   --fractional      Use partially-filled block element characters.  [boolean] [default=false]
   --include-percent Include a percentage after each bar.            [boolean] [default=false]
+  --name-mappings=FILENAME                                           [string] [default=]
+                    Specify a file containing newline-separated
+                    <Wakabako language name>\t<Replacement> pairs.
   --relative-bars   Scale bars relative to the most used language
                     instead of the sum of all languages used.       [boolean] [default=false]
   --scheme=SCHEME   Which set of block element characters to use.
@@ -19,13 +33,3 @@ Options:
   --width=WIDTH     The number of characters to use for each bar.   [integer] [default=21]
 ....
 
-== Config
-
-In `config.txt`:
-
-....
-user = <wakatime username>
-auth_key = <wakatime auth key>
-gist_id = <id of the gist to write to>
-title = <gist title>
-....
